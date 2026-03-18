@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.egg-info/
+
+# Candidate-specific (keep local, do not commit)
+Interview-Prep-*.md
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store

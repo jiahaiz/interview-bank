@@ -1,8 +1,14 @@
 # Q2: Reliable Event Ingestion for Analytics Pipeline
 
-## How This Exercise Works
+> **If your interviewer used a design-only phase:** You should have discussed the problem **before** receiving this folder. Do not skip that discussion retroactively — implement to match what you agreed, then align with the tests below.
 
-1. **Design first** — Decide how you will handle deduplication, validation, and stats. Document or whiteboard before coding.
+> **Interviewers:** For the **design phase without code**, use **`DESIGN_PHASE_SPEC.md`** only. See **`INTERVIEWER.md`**.
+
+---
+
+## How This Exercise Works (implementation phase)
+
+1. **You already did design** (with your interviewer) — deduplication, validation, stats semantics. Now map that to this codebase.
 2. **Tests do not pass initially** — The protected test suite and unit tests define the system requirements but **fail** because POST, GET, and the service layer are **not implemented** (stubbed).
 3. **Your job** — Implement POST /events, GET /users/{user_id}/stats, and `EventService` so that **all tests pass** and the service meets the requirements. You may add more tests for edge cases.
 4. **AI is allowed** — Use AI as you would in your normal workflow; you will be evaluated on both tech skill and how you use AI.

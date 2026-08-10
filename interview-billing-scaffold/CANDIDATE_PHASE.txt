@@ -1,1 +1,4 @@
-PHASE=verification (interviewer: push this commit, then candidate git pull && pytest -v)
+PHASE=implementation
+- Implement POST /events and GET /users/{id}/stats (see README.md).
+- Tests are not on GitHub yet. When done, tell your interviewer — they will push tests; you run: git pull
+- AI / Cursor Agent is allowed unless your interviewer says otherwise.

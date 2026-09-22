@@ -11,6 +11,7 @@ class Event:
     type: str
     ts: int
     value: float = 0.0
+    target_id: "str | None" = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Event":
@@ -20,6 +21,7 @@ class Event:
             type=str(data["type"]),
             ts=int(data["ts"]),
             value=float(data.get("value", 0)),
+            target_id=(str(data["target_id"]) if data.get("target_id") is not None else None),
         )
 
     def to_dict(self) -> dict[str, Any]:

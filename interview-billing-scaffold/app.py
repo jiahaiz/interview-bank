@@ -67,6 +67,12 @@ async def get_user_stats(
     return await get_user_stats_handler(user_id, event_service)
 
 
+@app.get("/posts/{post_id}/likes")
+def get_post_likes(post_id: str):
+    """Phase 2 — see PHASE2_LIKES.md. Implement EventService.like_count()."""
+    return {"likeCount": get_event_service_app().like_count(post_id)}
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}

@@ -25,3 +25,8 @@ class EventService:
         """Return aggregated stats for the given user (totalCount, sumValue, countByType)."""
         # TODO: implement — aggregate events for user_id from store
         return UserStats(total_count=0, sum_value=0.0, count_by_type={})
+
+    def like_count(self, target_id: str) -> int:
+        """Phase 2 only — see PHASE2_LIKES.md. Number of distinct users currently
+        in the liked state for this target. Not implemented."""
+        raise NotImplementedError

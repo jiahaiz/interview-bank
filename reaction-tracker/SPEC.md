@@ -1,78 +1,74 @@
-# Reaction Tracker
+# 点赞状态追踪
 
-Implement `ReactionTracker` in `tracker.py`. Standard library only.
+在 `tracker.py` 里实现 `ReactionTracker`。**只用标准库。**
 
-You may use any tools you normally use, including AI. I will ask you to explain
-your code.
+你可以用任何你平时用的工具,包括 AI。我会让你解释你的代码。
 
 ---
 
-## The system
+## 系统背景
 
-An upstream queue delivers reaction events. Each one looks like this:
+上游队列会投递「点赞 / 取消赞」事件。每条长这样:
 
 ```
 event_id = "e1"   user_id = "u1"   target_id = "post-42"   kind = "like"     ts = 1000
 event_id = "e2"   user_id = "u1"   target_id = "post-42"   kind = "unlike"   ts = 2000
 ```
 
-`ts` is an integer timestamp **assigned by the producer**, not by you.
+`ts` 是一个整数时间戳,**由生产方打上的,不是你这边生成的**。
 
-Two methods:
+两个方法:
 
 ```python
-tracker.record(event_id, user_id, target_id, kind, ts)   # ingest one event
-tracker.like_count(target_id)  -> int                     # read
+tracker.record(event_id, user_id, target_id, kind, ts)   # 接收一条事件
+tracker.like_count(target_id)  -> int                     # 读取
 ```
 
-`like_count` returns **the number of distinct users currently in the liked
-state for that target.**
+`like_count` 返回**当前处于「已点赞」状态的不同用户数**。
 
 ---
 
-## What Operations is telling you
+## 运维给你的反馈
 
-These are real reports from production. They are your requirements.
+以下是线上真实反馈。**这就是你的需求。**
 
-1. **"A user tapped like twice and it counted twice."**
-   The two taps arrived as two events with **different `event_id`s**.
-   Deduplicating on `event_id` did not catch it.
+1. **「有用户点了两次赞,结果算成了两个。」**
+   这两次点击是作为两条事件进来的,**`event_id` 不一样**。
+   按 `event_id` 去重没有拦住它。
 
-2. **"A user unliked something and the count didn't go down — sometimes."**
-   The queue does not preserve order. We have seen the `unlike` (`ts=2000`)
-   arrive **before** the `like` (`ts=1000`) it undoes.
+2. **「有用户取消了赞,但计数没减 —— 而且是『有时候』。」**
+   队列不保证顺序。我们见过 `unlike`(`ts=2000`)
+   **比它要撤销的那条 `like`(`ts=1000`)先到达**。
 
-3. **"The count drifted."**
-   After a burst of traffic, `like_count` did not match the number of users
-   actually in the liked state. It was off in **both** directions.
+3. **「计数会飘。」**
+   一波流量过去之后,`like_count` 和真正处于已赞状态的用户数对不上。
+   **两个方向都偏过。**
 
-4. **"Somebody unliked something they never liked."**
-   An `unlike` arrives with no prior `like`. Decide what that means, and make
-   sure it cannot corrupt the count.
-
----
-
-## Constraints
-
-- Standard library only.
-- `record` is called **concurrently from multiple threads**.
-- Targets are created implicitly. Reading a target nobody has touched is not
-  an error.
+4. **「有人取消了一个他从来没点过的赞。」**
+   来了一条没有前置 `like` 的 `unlike`。
+   你要决定它意味着什么,并且确保它不会把计数弄坏。
 
 ---
 
-## Parts of this spec are deliberately incomplete
+## 约束
 
-Some of the behaviour is not stated here. You have to decide it.
-
-**State your decision and your reasoning.** An assumption you made silently is
-the failure mode I am looking for.
+- **只用标准库。**
+- `record` 会被**多个线程同时调用**。
+- target 是隐式创建的。读一个从没被碰过的 target **不算错误**。
 
 ---
 
-## When you are done, be ready to walk through
+## 这份规格是故意写得不完整的
 
-- Where the state lives, and why that shape.
-- What your code does when a `like` and an `unlike` for the same user and
-  target carry the **same `ts`**.
-- Why your count cannot drift — in one sentence.
+有一部分行为这里**没有写**,需要你自己定。
+
+**把你的决定和理由说出来。** 一个你默默做了、却没说的假设,正是我要找的问题。
+
+---
+
+## 写完之后,准备好讲这三件事
+
+- 状态存在哪里,为什么是这个形状。
+- 同一个用户、同一个 target 的一条 `like` 和一条 `unlike`,**带着相同的 `ts`**,
+  你的代码会怎么判。
+- 你的计数**为什么不会飘** —— 一句话说清。

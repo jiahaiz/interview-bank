@@ -1,9 +1,8 @@
-# Reaction Tracker
+# 点赞状态追踪
 
-A standalone exercise. Standard library only — no web framework, no database,
-no dependencies to install.
+一道独立的题。**只用标准库** —— 没有 web 框架,没有数据库,不需要安装任何东西。
 
-- `SPEC.md` — the requirements.
-- `tracker.py` — implement the two methods here.
+- `SPEC.md` —— 需求
+- `tracker.py` —— 在这里实现两个方法
 
-Independent of `interview-billing-scaffold/`; either can be used on its own.
+和 `interview-billing-scaffold/` 互不相关,任选其一即可。
